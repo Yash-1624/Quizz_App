@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Quiz App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary: #7e22ce;
+            --secondary: #4f46e5;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --background: #f9fafb;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: var(--text);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 650px;
+            width: 100%;
+            margin: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        h3 {
+            color: var(--secondary);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .role-selection {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        button {
+            padding: 12px 24px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .question-box {
+            margin-top: 25px;
+            text-align: left;
+        }
+
+        #quiz-question {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            padding-left: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .options-container {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-button {
+            display: flex;
+            align-items: center;
+            margin: 0;
+            width: 100%;
+            background-color: #f8fafc;
+            color: var(--text);
+            padding: 15px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            text-align: left;
+            border: 2px solid #e2e8f0;
+            font-weight: 500;
+        }
+
+        .option-button:hover {
+            background-color: #f1f5f9;
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
+        }
+
+        .option-button.selected {
+            background-color: rgba(79, 70, 229, 0.1);
+            border-color: var(--secondary);
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .option-button.correct {
+            background-color: rgba(34, 197, 94, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .option-button.incorrect {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .option-button .option-text {
+            margin-left: 10px;
+        }
+
+        .option-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            color: var(--text-light);
+            margin-right: 12px;
+            font-weight: 600;
+        }
+
+        .selected .option-icon {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .correct .option-icon {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .incorrect .option-icon {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-wrapper:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        label {
+            display: block;
+            font-size: 1rem;
+            color: var(--text);
+            cursor: pointer;
+            user-select: none;
+            font-weight: 500;
+            width: 100%;
+        }
+
+        #result {
+            font-size: 1.5rem;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(126, 34, 206, 0.1), rgba(79, 70, 229, 0.1));
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .score-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .score-item {
+            text-align: center;
+            flex: 1;
+            padding: 15px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .score-item:not(:last-child) {
+            margin-right: 15px;
+        }
+
+        .score-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .score-item.correct .score-value {
+            color: var(--success);
+        }
+
+        .score-item.incorrect .score-value {
+            color: var(--danger);
+        }
+
+        .score-item.percent .score-value {
+            color: var(--primary);
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            background-color: #f0fdf4;
+            border-left: 4px solid var(--success);
+            color: #166534;
+            font-weight: 500;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .reset-btn {
+            background: #f1f5f9;
+            color: var(--text);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: fall 3s ease-in-out;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(500px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            button {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+
+            .role-selection {
+                flex-direction: column;
+            }
+
+            .score-details {
+                flex-direction: column;
+            }
+
+            .score-item:not(:last-child) {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container animate__animated animate__fadeIn">
+        <h2><i class="fas fa-cricket"></i> Cricket Quiz Master</h2>
+
+        <div class="role-selection animate__animated animate__fadeInUp">
+            <button onclick="setRole('admin')"><i class="fas fa-user-cog"></i> Admin Mode</button>
+            <button onclick="setRole('user')"><i class="fas fa-user-graduate"></i> Take Quiz</button>
+        </div>
+
+        <!-- Admin Interface -->
+        <div class="admin-box hidden animate__animated animate__fadeIn">
+            <h3><i class="fas fa-tasks"></i> Select Questions</h3>
+            <form id="question-selection-form"></form>
+            <div class="action-buttons">
+                <button onclick="confirmSelection()"><i class="fas fa-check"></i> Confirm Selection</button>
+                <button class="reset-btn" onclick="resetSelection()"><i class="fas fa-redo"></i> Reset</button>
+            </div>
+            <div id="admin-msg" class="message hidden"></div>
+        </div>
+
+        <!-- User Interface -->
+        <div class="quiz-box hidden animate__animated animate__fadeIn">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="question-box">
+                <p id="quiz-question" class="animate__animated animate__fadeIn"></p>
+                <div id="options" class="options-container"></div>
+                <div class="action-buttons">
+                    <button onclick="nextQuestion()" id="next-btn"><i class="fas fa-arrow-right"></i> Next
+                        Question</button>
+                </div>
+            </div>
+            <div id="result-container" class="hidden animate__animated animate__fadeIn">
+                <div class="score-details">
+                    <div class="score-item correct">
+                        <div class="score-label">Correct</div>
+                        <div class="score-value" id="correct-count">0</div>
+                    </div>
+                    <div class="score-item incorrect">
+                        <div class="score-label">Incorrect</div>
+                        <div class="score-value" id="incorrect-count">0</div>
+                    </div>
+                    <div class="score-item percent">
+                        <div class="score-label">Score</div>
+                        <div class="score-value" id="percent">0%</div>
+                    </div>
+                </div>
+                <p id="result"></p>
+                <div class="action-buttons">
+                    <button onclick="restartQuiz()"><i class="fas fa-redo"></i> Restart Quiz</button>
+                    <button onclick="returnToMainMenu()"><i class="fas fa-home"></i> Main Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let role = "";
+        let allQuestions = [
+            { question: "Which country won the ICC Men's Cricket World Cup 2023?", options: ["India", "Australia", "England", "New Zealand"], correct: 2 },
+            { question: "What is the highest individual score in Test cricket?", options: ["400*", "375", "334", "501*"], correct: 1 },
+            { question: "Which cricket term refers to a batsman being dismissed without scoring any runs?", options: ["Leg Before Wicket", "Duck", "Maiden Over", "Stumped"], correct: 2 },
+            { question: "How many players are there in a cricket team on the field?", options: ["10", "11", "12", "9"], correct: 2 },
+            { question: "Which bowler has taken the most wickets in international cricket (all formats combined)?", options: ["Shane Warne", "James Anderson", "Muttiah Muralitharan", "Anil Kumble"], correct: 3 },
+            { question: "What is the maximum width of a cricket bat allowed by the laws?", options: ["4.25 inches", "5.5 inches", "6 inches", "4 inches"], correct: 1 },
+            { question: "Which player has scored the most centuries in international cricket?", options: ["Ricky Ponting", "Virat Kohli", "Sachin Tendulkar", "Kumar Sangakkara"], correct: 3 },
+            { question: "What does LBW stand for in cricket?", options: ["Long Ball Wide", "Leg Before Wicket", "Lofted Batting Wicket", "Lower Batting Window"], correct: 2 },
+            { question: "Which country has won the most ICC Men's Cricket World Cups?", options: ["India", "West Indies", "England", "Australia"], correct: 4 },
+            { question: "What is the name of the trophy awarded to the winner of a Test series between England and Australia?", options: ["The Ashes", "World Cup", "Champions Trophy", "ICC Trophy"], correct: 1 },
+            { question: "How many runs are scored for hitting the ball over the boundary without it touching the ground?", options: ["4", "6", "2", "1"], correct: 2 },
+            { question: "Which cricket format is typically played over a single day with each team getting 50 overs?", options: ["Test Cricket", "Twenty20", "One Day International", "First-class Cricket"], correct: 3 },
+            { question: "Which Indian cricketer is nicknamed 'The Wall'?", options: ["Sachin Tendulkar", "MS Dhoni", "Rahul Dravid", "Virat Kohli"], correct: 3 },
+            { question: "How many balls are in an over in standard international cricket?", options: ["4", "6", "8", "5"], correct: 2 },
+            { question: "Which cricketer holds the record for most sixes in international cricket?", options: ["Chris Gayle", "Shahid Afridi", "MS Dhoni", "Rohit Sharma"], correct: 1 }
+        ];
+
+        let selectedQuestions = JSON.parse(localStorage.getItem("selectedQuestions")) || [];
+        let currentQuestion = 0;
+        let score = 0;
+        let answerSelected = false;
+        let incorrectAnswers = 0;
+
+        function setRole(selectedRole) {
+            role = selectedRole;
+            document.querySelector(".role-selection").classList.add("hidden");
+            if (role === "admin") {
+                document.querySelector(".admin-box").classList.remove("hidden");
+                loadQuestionSelection();
+            } else {
+                if (selectedQuestions.length === 0) {
+                    alert("No questions have been selected by the admin yet.");
+                    location.reload();
+                } else {
+                    document.querySelector(".quiz-box").classList.remove("hidden");
+                    showQuestion();
+                }
+            }
+        }
+
+        function returnToMainMenu() {
+            // Hide all interfaces
+            document.querySelector(".admin-box").classList.add("hidden");
+            document.querySelector(".quiz-box").classList.add("hidden");
+
+            // Show role selection
+            document.querySelector(".role-selection").classList.remove("hidden");
+
+            // Reset quiz data
+            currentQuestion = 0;
+            score = 0;
+            incorrectAnswers = 0;
+            answerSelected = false;
+
+            // Reset the quiz UI for next time
+            document.getElementById("result-container").classList.add("hidden");
+            document.querySelector(".question-box").classList.remove("hidden");
+        }
+
+        function loadQuestionSelection() {
+            const form = document.getElementById("question-selection-form");
+            form.innerHTML = "";
+            allQuestions.forEach((q, index) => {
+                const isSelected = selectedQuestions.find(sel => sel.question === q.question);
+
+                const wrapper = document.createElement("div");
+                wrapper.className = "checkbox-wrapper";
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.id = `q${index}`;
+                checkbox.value = index;
+                checkbox.checked = isSelected;
+
+                const label = document.createElement("label");
+                label.htmlFor = `q${index}`;
+                label.innerText = q.question;
+
+                wrapper.appendChild(checkbox);
+                wrapper.appendChild(label);
+                form.appendChild(wrapper);
+            });
+        }
+
+        function resetSelection() {
+            document.querySelectorAll("#question-selection-form input[type='checkbox']").forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            const adminMsg = document.getElementById("admin-msg");
+            adminMsg.textContent = "Selection reset. Please select questions.";
+            adminMsg.classList.remove("hidden");
+            setTimeout(() => adminMsg.classList.add("hidden"), 3000);
+        }
+
+        function confirmSelection() {
+            const checked = Array.from(document.querySelectorAll("#question-selection-form input:checked"));
+            const adminMsg = document.getElementById("admin-msg");
+
+            if (checked.length === 0) {
+                adminMsg.textContent = "Please select at least one question.";
+                adminMsg.classList.remove("hidden");
+                setTimeout(() => adminMsg.classList.add("hidden"), 3000);
+                return;
+            }
+
+            selectedQuestions = checked.map(input => allQuestions[parseInt(input.value)]);
+            localStorage.setItem("selectedQuestions", JSON.stringify(selectedQuestions));
+
+            adminMsg.textContent = `${selectedQuestions.length} question(s) selected! Users can now take the quiz.`;
+            adminMsg.classList.remove("hidden");
+
+            // Return to main menu after 2 seconds
+            setTimeout(() => {
+                returnToMainMenu();
+            }, 2000);
+        }
+
+        function updateProgressBar() {
+            const progressBar = document.getElementById("progress-bar");
+            const progressPercentage = ((currentQuestion + 1) / selectedQuestions.length) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+        }
+
+        function showQuestion() {
+            answerSelected = false;
+            updateProgressBar();
+
+            const q = selectedQuestions[currentQuestion];
+            const questionElement = document.getElementById("quiz-question");
+            questionElement.textContent = q.question;
+            questionElement.className = "animate__animated animate__fadeIn";
+
+            const optionsDiv = document.getElementById("options");
+            optionsDiv.innerHTML = "";
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement("button");
+                btn.className = "option-button animate__animated animate__fadeIn";
+                btn.style.animationDelay = `${index * 0.1}s`;
+
+                const optionIcon = document.createElement("span");
+                optionIcon.className = "option-icon";
+                optionIcon.textContent = String.fromCharCode(65 + index); // A, B, C, D...
+
+                const optionText = document.createElement("span");
+                optionText.className = "option-text";
+                optionText.textContent = opt;
+
+                btn.appendChild(optionIcon);
+                btn.appendChild(optionText);
+                btn.onclick = () => checkAnswer(btn, index + 1);
+
+                optionsDiv.appendChild(btn);
+            });
+
+            document.getElementById("next-btn").innerHTML = currentQuestion === selectedQuestions.length - 1
+                ? '<i class="fas fa-flag-checkered"></i> Finish Quiz'
+                : '<i class="fas fa-arrow-right"></i> Next Question';
+        }
+
+        function checkAnswer(button, selected) {
+            if (answerSelected) return;
+
+            answerSelected = true;
+            const correct = selectedQuestions[currentQuestion].correct;
+
+            document.querySelectorAll(".option-button").forEach(btn => {
+                btn.disabled = true;
+                const btnIndex = Array.from(btn.parentNode.children).indexOf(btn) + 1;
+
+                if (btnIndex === correct) {
+                    btn.classList.add("correct");
+                } else if (btnIndex === selected && selected !== correct) {
+                    btn.classList.add("incorrect");
+                }
+            });
+
+            if (selected === correct) {
+                score++;
+                button.classList.add("selected", "correct");
+                createConfetti();
+            } else {
+                button.classList.add("selected", "incorrect");
+                incorrectAnswers++;
+            }
+        }
+
+        function createConfetti() {
+            const container = document.querySelector(".container");
+            const colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff", "#00ffff"];
+
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement("div");
+                confetti.className = "confetti";
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = `${Math.random() * 2 + 2}s`;
+                confetti.style.width = `${Math.random() * 10 + 5}px`;
+                confetti.style.height = confetti.style.width;
+
+                container.appendChild(confetti);
+
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+
+        function nextQuestion() {
+            if (!answerSelected && currentQuestion < selectedQuestions.length) {
+                const confirmSkip = confirm("You haven't selected an answer. Are you sure you want to skip this question?");
+                if (!confirmSkip) return;
+                incorrectAnswers++;
+            }
+
+            currentQuestion++;
+            if (currentQuestion < selectedQuestions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.querySelector(".question-box").classList.add("hidden");
+            document.getElementById("result-container").classList.remove("hidden");
+
+            const correctCount = document.getElementById("correct-count");
+            const incorrectCount = document.getElementById("incorrect-count");
+            const percentElement = document.getElementById("percent");
+            const resultElement = document.getElementById("result");
+
+            correctCount.textContent = score;
+            incorrectCount.textContent = incorrectAnswers;
+
+            const percentage = Math.round((score / selectedQuestions.length) * 100);
+            percentElement.textContent = `${percentage}%`;
+
+            let message;
+            if (percentage >= 90) {
+                message = "🏆 Outstanding! You're a cricket expert!";
+            } else if (percentage >= 70) {
+                message = "🎉 Great job! You really know your cricket!";
+            } else if (percentage >= 50) {
+                message = "👍 Good effort! You've got decent cricket knowledge!";
+            } else {
+                message = "🤔 Keep practicing! There's more to learn about cricket!";
+            }
+
+            resultElement.innerHTML = `${message}<br>Your Score: ${score}/${selectedQuestions.length}`;
+
+            if (percentage >= 70) {
+                createConfetti();
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            incorrectAnswers = 0;
+            document.getElementById("result-container").classList.add("hidden");
+            document.querySelector(".question-box").classList.remove("hidden");
+            showQuestion();
+        }
+    </script>
+
+</body>
+
+</html>
