@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Quiz App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container animate__animated animate__fadeIn">
+        <h2><i class="fas fa-cricket"></i> Cricket Quiz Master</h2>
+
+        <div class="role-selection animate__animated animate__fadeInUp">
+            <button onclick="setRole('admin')"><i class="fas fa-user-cog"></i> Admin Mode</button>
+            <button onclick="setRole('user')"><i class="fas fa-user-graduate"></i> Take Quiz</button>
+        </div>
+
+        <!-- Admin Interface -->
+        <div class="admin-box hidden animate__animated animate__fadeIn">
+            <h3><i class="fas fa-tasks"></i> Select Questions</h3>
+            <form id="question-selection-form"></form>
+            <div class="action-buttons">
+                <button onclick="confirmSelection()"><i class="fas fa-check"></i> Confirm Selection</button>
+                <button class="reset-btn" onclick="resetSelection()"><i class="fas fa-redo"></i> Reset</button>
+            </div>
+            <div id="admin-msg" class="message hidden"></div>
+        </div>
+
+        <!-- User Interface -->
+        <div class="quiz-box hidden animate__animated animate__fadeIn">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="question-box">
+                <p id="quiz-question" class="animate__animated animate__fadeIn"></p>
+                <div id="options" class="options-container"></div>
+                <div class="action-buttons">
+                    <button onclick="nextQuestion()" id="next-btn"><i class="fas fa-arrow-right"></i> Next
+                        Question</button>
+                </div>
+            </div>
+            <div id="result-container" class="hidden animate__animated animate__fadeIn">
+                <div class="score-details">
+                    <div class="score-item correct">
+                        <div class="score-label">Correct</div>
+                        <div class="score-value" id="correct-count">0</div>
+                    </div>
+                    <div class="score-item incorrect">
+                        <div class="score-label">Incorrect</div>
+                        <div class="score-value" id="incorrect-count">0</div>
+                    </div>
+                    <div class="score-item percent">
+                        <div class="score-label">Score</div>
+                        <div class="score-value" id="percent">0%</div>
+                    </div>
+                </div>
+                <p id="result"></p>
+                <div class="action-buttons">
+                    <button onclick="restartQuiz()"><i class="fas fa-redo"></i> Restart Quiz</button>
+                    <button onclick="returnToMainMenu()"><i class="fas fa-home"></i> Main Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
